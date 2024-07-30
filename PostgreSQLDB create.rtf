@@ -1,0 +1,116 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red251\green2\blue7;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c14913\c0;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid2\'02\'01.;}{\levelnumbers\'01;}\fi-360\li1440\lin1440 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
+\margl1440\margr1440\vieww17620\viewh13440\viewkind0
+\deftab560
+\pard\pardeftab560\partightenfactor0
+
+\f0\fs28 \cf0 PostgreSQL\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 \
+Create EC2 Instance\
+\pard\pardeftab560\pardirnatural\partightenfactor0
+\ls1\ilvl0\cf0 1 EC2 - Select your region\
+\pard\pardeftab560\pardirnatural\partightenfactor0
+\ls1\ilvl1\cf0 2 Create EC2 - Name - PostgreSQL-Ec2\
+3 AMI - Amazon Linux Free Tier 64-bit (X86)\
+4 Instance type - t2.micro - Free Tier\
+5 Create key pair\
+6 Network settings - Auto-assign public IP - Enable\
+7 Security Group)SG) - Create - open ports 5432, 22 \
+8 lunch instance\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 \
+Create PostgreDQ DB\
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab560\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 {\listtext	1.	}Databases\
+{\listtext	2.	}Create Database - Select your region\
+{\listtext	3.	}Select Standard\
+{\listtext	4.	}Engine Type - PostgreSQL & version 16.3-R2\
+{\listtext	5.	}Templates - Free Tier\
+{\listtext	6.	}Settings - Give database name - CarDB101\
+{\listtext	7.	}Credentials - Master username - postres, PW - admin2525\
+{\listtext	8.	}Instance Configuration - Burtable AMI -db.t3.micro\
+{\listtext	9.	}Storage - GP -SSD (gp2)\
+{\listtext	10.	}Select instance to connect to DB - PostgreSQL-Ec2\
+	11.  Create Database\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 \
+Login to EC2\
+\pard\pardeftab560\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	1.	}yum update -y\
+{\listtext	2.	}sudo yum install -y postgresql15\
+{\listtext	3.	}psql --version\
+{\listtext	4.	}Connect to postgreSQLDB \
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0        5.    Login to CarDB101 from EC2 in Public Subnet:\
+ psql -h \cf2 postgresql-1.chciwawgeddx.us-west-1.rds.amazonaws.com -\cf0 p 5432 -U postgres -W  \
+		# -h enter your AWS endpoint -U user, -P port#, -W is the key for password(leave Blank) \
+	Enter password: screen will not show keystrokes when you type or paste in password. \
+\
+Run \
+postgres=> \\l - List DBs\
+                                                 List of databases\
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   \
+-----------+----------+----------+-------------+-------------+------------+-----------------+-----------------------\
+ CarDB101  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | \
+\
+\\dt - list tables\
+\
+Connect to DB - CarDB101;\
+\
+\pard\pardeftab560\sa40\partightenfactor0
+\cf0 CREATE TABLE cars (\
+  brand VARCHAR(255),\
+  model VARCHAR(255),\
+  year INT\
+);\
+\
+SELECT * FROM cars;\
+\
+# one insert \
+INSERT INTO cars (brand, model, year)\
+VALUES ('Ford', 'Mustang', 1964);\
+\
+# Multi-insert\
+INSERT INTO cars (brand, model, year)\
+VALUES\
+\'a0\'a0('Volvo', 'p1800', 1968),\
+\'a0\'a0('BMW', 'M1', 1978),\
+\'a0\'a0('Toyota', 'Celica', 1975);\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 \
+INSERT INTO cars (brand, model, year)\
+VALUES\
+\'a0\'a0('Volvo', 'p1800', 1968),\
+\'a0\'a0('BMW', 'M1', 1978),\
+\'a0\'a0('Toyota', 'Celica', 1975);\
+\pard\pardeftab560\sa40\partightenfactor0
+\cf0 \
+# Select column names\
+SELECT brand, year FROM cars;\
+\
+# Add column\
+ALTER TABLE cars\
+ADD color VARCHAR(255);\
+\
+# Update table\
+# Be careful when updating records. If you omit the WHERE clause, ALL records will be updated!\
+UPDATE cars\
+SET color = 'red'\
+WHERE brand = 'Volvo';\
+\
+# Update multiple tables\
+UPDATE cars\
+SET color = 'white', year = 1970\
+WHERE brand = 'Toyota';\
+\
+\
+}
