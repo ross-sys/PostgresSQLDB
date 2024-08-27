@@ -1,0 +1,87 @@
+PostgreSQL
+
+Create EC2 Instance
+1. EC2 - Select your region
+    1. Create EC2 - Name - PostgreSQL-Ec2
+    2. AMI - Amazon Linux Free Tier 64-bit (X86)
+    3. Instance type - t2.micro - Free Tier
+    4. Create key pair
+    5. Network settings - Auto-assign public IP - Enable
+    6. Security Group)SG) - Create - open ports 5432, 22 
+    7. Launch instance
+
+
+
+1. Databases
+2. Create Database - Select your region
+3. Select Standard
+4. Engine Type - PostgreSQL & version 16.3-R2
+5. Templates - Free Tier
+6. Settings - Give database name - CarDB101
+7. Credentials - Master username - postres, PW - admin2525
+8. Instance Configuration - Burtable AMI -db.t3.micro
+9. Storage - GP -SSD (gp2)
+10. Select instance to connect to DB - PostgreSQL-Ec2
+11. Create Database
+
+Login to EC2
+1. yum update -y
+2. sudo yum install -y postgresql15
+3. psql --version
+4. Connect to postgreSQLDB 
+  5. Login from EC2 in Public Subnet:
+ psql -h postgresql-1.chciwawgeddx.us-west-1.rds.amazonaws.com -p 5432 -U postgres -W  # -h enter your AWS endpoint -U user, -P port#, -W is the key for password
+
+Run 
+postgres=> \l
+                                                 List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   
+-----------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ CarDB101  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+
+\dt - list tables
+
+Connect to DB - CarDB101;
+
+CREATE TABLE cars (
+  brand VARCHAR(255),
+  model VARCHAR(255),
+  year INT
+);
+
+SELECT * FROM cars;
+
+# one insert 
+INSERT INTO cars (brand, model, year)
+VALUES ('Ford', 'Mustang', 1964);
+
+# Multi-insert
+INSERT INTO cars (brand, model, year)
+VALUES
+  ('Volvo', 'p1800', 1968),
+  ('BMW', 'M1', 1978),
+  ('Toyota', 'Celica', 1975);
+
+INSERT INTO cars (brand, model, year)
+VALUES
+  ('Volvo', 'p1800', 1968),
+  ('BMW', 'M1', 1978),
+  ('Toyota', 'Celica', 1975);
+
+# Select column names
+SELECT brand, year FROM cars;
+
+# Add column
+ALTER TABLE cars
+ADD color VARCHAR(255);
+
+# Update table
+# Be careful when updating records. If you omit the WHERE clause, ALL records will be updated!
+UPDATE cars
+SET color = 'red'
+WHERE brand = 'Volvo';
+
+# Update multiple tables
+UPDATE cars
+SET color = 'white', year = 1970
+WHERE brand = 'Toyota';
